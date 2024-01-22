@@ -26,9 +26,9 @@ def verify_certificate(attestation_cert, intermediate_cert, root_cert):
             pad,
             hash_algorithm
         )
-        print("Attestation certificate is validly signed by the intermediate certificate.")
+        print("Attestation certificate is validly signed by the intermediate certificate. ✅" )
     except Exception as e:
-        print(f"Verification with intermediate certificate failed: {e}")
+        print(f"Verification with intermediate certificate failed: {e} ❌")
         return
 
     try:
@@ -38,17 +38,17 @@ def verify_certificate(attestation_cert, intermediate_cert, root_cert):
             pad,
             hash_algorithm
         )
-        print("Intermediate certificate is validly signed by the root certificate.")
+        print("Intermediate certificate is validly signed by the root certificate. ✅" + '\n')
     except Exception as e:
-        print(f"Verification with root certificate failed: {e}")
+        print(f"Verification with root certificate failed: {e} ❌")
         return
 
     current_time = datetime.datetime.utcnow()
     for cert in [attestation_cert, intermediate_cert, root_cert]:
         if cert.not_valid_before <= current_time <= cert.not_valid_after:
-            print(f"Certificate {cert.subject} is valid.")
+            print(f"Certificate {cert.subject} is valid. ✅")
         else:
-            print(f"Certificate {cert.subject} is not valid.")
+            print(f"Certificate {cert.subject} is not valid. ❌")
 
 def check_public_key(csr, attestation_cert):
     csr_public_key_bytes = csr.public_key().public_bytes(
@@ -60,9 +60,9 @@ def check_public_key(csr, attestation_cert):
         format=serialization.PublicFormat.SubjectPublicKeyInfo
     )
     if csr_public_key_bytes == attestation_public_key_bytes:
-        print("Public key in CSR and attestation certificate are the same." + '\n')
+        print("Public key in CSR and attestation certificate are the same. ✅" + '\n')
     else:
-        print("Public key in CSR and attestation certificate are different.")
+        print("Public key in CSR and attestation certificate are different. ❌")
 
 def decode_yubikey_info(attestation_cert):
     firmware_version = serial_number = pin_policy = touch_policy = "Not Found"
