@@ -74,8 +74,9 @@ def decode_yubikey_info(attestation_cert):
             firmware_version = f"{int(ext_data[:2], 16)}.{int(ext_data[2:4], 16)}.{int(ext_data[4:6], 16)}"
         elif ext.oid.dotted_string == "1.3.6.1.4.1.41482.3.7":
             # Decode Serial Number
-            ext_data = binascii.hexlify(ext.value.value).decode('utf-8')
-            serial_number = int(ext_data, 16)
+            ext_data = ext.value.value
+            # Assuming the first two bytes are not part of the serial number, skip them
+            serial_number = int(binascii.hexlify(ext_data[2:]), 16)
         elif ext.oid.dotted_string == "1.3.6.1.4.1.41482.3.8":
             # Decode Pin Policy and Touch Policy
             ext_data = binascii.hexlify(ext.value.value).decode('utf-8')
